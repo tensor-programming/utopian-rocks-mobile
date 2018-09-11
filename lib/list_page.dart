@@ -39,26 +39,26 @@ class ListPage extends StatelessWidget {
               Color categoryColor = getCategoryColor(snapshot, index);
               int iconCode = getIcon(snapshot, index);
 
-              // [ListTile] is the main body for each Contribution
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        // Get user name and then get the avatar from steemitimages.com
-                        image: NetworkImage(
-                          'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+              // A [GestureDetector] to allow the user to open the article in a browser window or share it.
+              return GestureDetector(
+                // [ListTile] is the main body for each Contribution
+                child: ListTile(
+                  leading: CircleAvatar(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          // Get user name and then get the avatar from steemitimages.com
+                          image: NetworkImage(
+                            'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                // A gesture detector to allow the user to open the article in a browser window or share it.
-                title: GestureDetector(
                   // Contribution Title with formated text.
-                  child: Text(
+                  title: Text(
                     '${snapshot.data[index].title}',
                     style: TextStyle(
                       fontSize: 14.0,
@@ -66,24 +66,24 @@ class ListPage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                  // Using the share library to deploy a share intent on both android and iOS with the contribution url.
-                  onDoubleTap: () {
-                    Share.share('${snapshot.data[index].url}');
-                  },
-                ),
-                // Subtitle takes the repo name and formatted timestamp and displays them below Title
-                subtitle: Text(
-                  "$repo - $created",
-                  style: TextStyle(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.w600,
+                  // Subtitle takes the repo name and formatted timestamp and displays them below Title
+                  subtitle: Text(
+                    "$repo - $created",
+                    style: TextStyle(
+                      fontSize: 10.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  // Get icon from utopicons font family and color it based on the category.
+                  trailing: Icon(
+                    IconData(iconCode ?? 0x0000, fontFamily: 'Utopicons'),
+                    color: categoryColor,
                   ),
                 ),
-                // Get icon from utopicons font family and color it based on the category.
-                trailing: Icon(
-                  IconData(iconCode ?? 0x0000, fontFamily: 'Utopicons'),
-                  color: categoryColor,
-                ),
+                // Using the share library to deploy a share intent on both android and iOS with the contribution url.
+                onDoubleTap: () {
+                  Share.share('${snapshot.data[index].url}');
+                },
               );
             });
       },
