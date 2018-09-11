@@ -29,6 +29,13 @@ dev_dependencies:
   # Creation of Launcher Icons
   flutter_launcher_icons: any
 
+flutter_icons:
+  android: true
+  ios: 'Example-Icon'
+  image_path: 'icon/icon.png'
+  image_path_android: 'icon/icon.png'
+  image_path_ios: 'icon/icon.png'
+  adaptive_icon_background: '#FFFAFAFA'
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
