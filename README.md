@@ -1,6 +1,7 @@
-# utopian_rocks
+# Utopian Rocks Mobile Application for iOS and Android
 
-A new Flutter project.
+This is a mobile application based on the https://utopian.rocks/ website.  It makes use of the BLoC pattern and API endpoints from the 
+Utopian Rocks website.  
 
 ## Getting Started
 
