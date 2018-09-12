@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:utopian_rocks/provider.dart';
 import 'package:utopian_rocks/utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ListPage extends StatelessWidget {
   final String tabname;
@@ -81,8 +81,8 @@ class ListPage extends StatelessWidget {
                   ),
                 ),
                 // Using the share library to deploy a share intent on both android and iOS with the contribution url.
-                onDoubleTap: () {
-                  Share.share('${snapshot.data[index].url}');
+                onDoubleTap: () async {
+                  await _launchUrl(snapshot.data[index].url);
                 },
               );
             });
@@ -106,6 +106,15 @@ class ListPage extends StatelessWidget {
       return "Created: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].created))}";
     } else {
       return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";
+    }
+  }
+
+  // Laucn the steemit/utopian url using the url_launcher package.
+  _launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }
