@@ -56,7 +56,9 @@ class ListPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    backgroundColor: Colors.white,
                   ),
+
                   // Contribution Title with formated text.
                   title: Text(
                     '${snapshot.data[index].title}',
