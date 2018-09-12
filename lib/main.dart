@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
+import 'package:connectivity/connectivity.dart';
+
 import 'package:utopian_rocks/list_page.dart';
 import 'package:utopian_rocks/repository.dart';
 
-import 'package:utopian_rocks/provider.dart';
-import 'package:utopian_rocks/bloc.dart';
+import 'package:utopian_rocks/providers/contribution_provider.dart';
+import 'package:utopian_rocks/blocs/contribution_bloc.dart';
+import 'package:utopian_rocks/blocs/information_bloc.dart';
+import 'package:utopian_rocks/providers/information_provider.dart';
+
+import 'package:utopian_rocks/drawer.dart';
 
 void main() => runApp(MyApp());
 
@@ -68,10 +75,11 @@ class MyApp extends StatelessWidget {
                 ListPage('pending'),
               ],
             ),
-            // Todo: Add information Drawer.
-            // endDrawer: Drawer(
-            //   semanticLabel: 'Information',
-            // ),
+            endDrawer: InformationProvider(
+              informationBloc: InformationBloc(PackageInfo.fromPlatform(),
+                  Connectivity().checkConnectivity()),
+              child: InformationDrawer(),
+            ),
           ),
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:utopian_rocks/provider.dart';
+import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
@@ -63,7 +63,7 @@ class ListPage extends StatelessWidget {
                   title: Text(
                     '${snapshot.data[index].title}',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.left,
@@ -72,7 +72,7 @@ class ListPage extends StatelessWidget {
                   subtitle: Text(
                     "$repo - $created",
                     style: TextStyle(
-                      fontSize: 10.0,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
