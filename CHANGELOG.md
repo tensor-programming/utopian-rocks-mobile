@@ -2,6 +2,7 @@
 
 - Removed Share in favor of url_launcher.
 - Changed Launcher name for Android and added Launcher Icon
+- [Bug] changed profile background image from blue to white
 
 ## 0.0.1
 
