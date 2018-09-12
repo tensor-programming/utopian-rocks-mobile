@@ -112,9 +112,10 @@ class ListPage extends StatelessWidget {
   // Laucn the steemit/utopian url using the url_launcher package.
   _launchUrl(String url) async {
     if (await canLaunch(url)) {
+      print('Launching: $url');
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      print('Could not launch $url');
     }
   }
 }
