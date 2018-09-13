@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:utopian_rocks/providers/contribution_provider.dart';
-import 'package:utopian_rocks/utils.dart';
+import 'package:utopian_rocks/utils/utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:utopian_rocks/list_page.dart';
-import 'package:utopian_rocks/repository.dart';
+import 'package:utopian_rocks/components/list_page.dart';
+import 'package:utopian_rocks/components/drawer.dart';
+
+import 'package:utopian_rocks/model/repository.dart';
 
 import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
-
-import 'package:utopian_rocks/drawer.dart';
 
 void main() => runApp(MyApp());
 

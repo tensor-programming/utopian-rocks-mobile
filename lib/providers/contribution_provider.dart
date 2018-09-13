@@ -1,4 +1,4 @@
-import 'package:utopian_rocks/repository.dart';
+import 'package:utopian_rocks/model/repository.dart';
 
 import 'package:flutter/widgets.dart';
 

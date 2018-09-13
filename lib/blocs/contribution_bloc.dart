@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:utopian_rocks/model.dart';
-import 'package:utopian_rocks/repository.dart';
+import 'package:utopian_rocks/model/model.dart';
+import 'package:utopian_rocks/model/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 // Contribution buisness logic class
