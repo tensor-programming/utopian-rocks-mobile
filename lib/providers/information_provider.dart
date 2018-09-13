@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 
+// Provider for the [InformationBloc]
 class InformationProvider extends InheritedWidget {
   final InformationBloc informationBloc;
 
