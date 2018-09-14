@@ -24,7 +24,7 @@ dependencies:
   url_launcher: ^3.0.3
   connectivity: ^0.3.1
   package_info: ^0.3.2
-  flutter_local_notifications: ^0.3.7
+  intl: ^0.15.7
 
   # share: ^0.5.3
 

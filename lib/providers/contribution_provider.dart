@@ -3,6 +3,7 @@ import 'package:utopian_rocks/model/repository.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
+import 'package:utopian_rocks/model/htmlParser.dart';
 
 // Provider provides bloc to the widget tree where we need it by using the [InheritedWidget] class.
 class ContributionProvider extends InheritedWidget {
@@ -23,6 +24,10 @@ class ContributionProvider extends InheritedWidget {
     Key key,
     ContributionBloc contributionBloc,
     Widget child,
-  })  : this.contributionBloc = contributionBloc ?? ContributionBloc(Api()),
+  })  : this.contributionBloc = contributionBloc ??
+            ContributionBloc(
+              Api(),
+              ParseWebsite(),
+            ),
         super(child: child, key: key);
 }

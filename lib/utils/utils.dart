@@ -32,6 +32,22 @@ const icons = <String, int>{
   'social': 0x004c,
 };
 
+// Vote wieghts for Utopian vote based on Category
+const voteWieghts = <String, double>{
+  "ideas": 20.0,
+  "development": 55.0,
+  "bug-hunting": 13.0,
+  "translations": 35.0,
+  "graphics": 40.0,
+  "analysis": 45.0,
+  "social": 30.0,
+  "documentation": 30.0,
+  "tutorials": 30.0,
+  "video-tutorials": 35.0,
+  "copywriting": 30.0,
+  "blog": 30.0,
+};
+
 // Get Color based on Category String
 Color getCategoryColor(AsyncSnapshot snapshot, int index) {
   return colors[snapshot.data[index].category];

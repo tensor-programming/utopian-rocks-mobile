@@ -11,6 +11,7 @@ import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
+import 'package:utopian_rocks/model/htmlParser.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,7 +22,10 @@ class MyApp extends StatelessWidget {
     // root widget is the [ContributionProvider] so that the BLoC is available anywhere.
     return ContributionProvider(
       // Instantiate the API and the BLoC for the entire application.
-      contributionBloc: ContributionBloc(Api()),
+      contributionBloc: ContributionBloc(
+        Api(),
+        ParseWebsite(),
+      ),
       child: MaterialApp(
         // Remove Debug flag to allow app to be production ready.
         debugShowCheckedModeBanner: false,
