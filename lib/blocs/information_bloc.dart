@@ -24,7 +24,7 @@ class InformationBloc {
     api.getReleases();
 
     _releases = Observable.fromFuture(api.getReleases())
-        .debounce(Duration(seconds: 1))
+        .debounce(Duration(minutes: 5))
         .asBroadcastStream();
   }
 }
