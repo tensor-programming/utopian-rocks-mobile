@@ -13,13 +13,9 @@ class GithubApi {
   Future<GithubReleaseModel> getReleases() async {
     List<GithubReleaseModel> items = [];
 
-    await _client
-        .get(Uri.parse(_url))
-        .then((Response res) => res.body)
-        .then(json.decode)
-        .then((j) => j.forEach((Map<String, dynamic> contribution) =>
-            items.add(GithubReleaseModel.fromJson(contribution))));
-
-    return items.first;
+    Response res = await _client.get(Uri.parse(_url));
+    List map = json.decode(res.body);
+    var x = map.map((gh) => GithubReleaseModel.fromJson(gh)).toList();
+    return x.first;
   }
 }

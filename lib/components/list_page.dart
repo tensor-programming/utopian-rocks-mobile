@@ -35,10 +35,8 @@ class ListPage extends StatelessWidget {
           );
         }
 
-        infoBloc.releases.listen((releases) {
-          infoBloc.infoStream.listen((pkInfo) {
-            print(pkInfo.version);
-            print(releases.tagName);
+        infoBloc.infoStream.listen((pkInfo) {
+          infoBloc.releases.listen((releases) {
             if (pkInfo.version.toString() != releases.tagName) {
               showDialog(
                   context: context,

@@ -57,7 +57,7 @@ class GithubReleaseModel {
 
   GithubReleaseModel(this.tagName, this.htmlUrl);
 
-  GithubReleaseModel.fromJson(Map<String, dynamic> json)
+  GithubReleaseModel.fromJson(Map json)
       : this.tagName = json['tag_name'],
         this.htmlUrl = json['html_url'];
 }

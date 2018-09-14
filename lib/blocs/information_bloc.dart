@@ -17,12 +17,14 @@ class InformationBloc {
   Stream<PackageInfo> get infoStream => _infoStream;
   Stream<GithubReleaseModel> get releases => _releases;
 
-  // BLoc that serves connectivity information and package information to the information drawer.
+  // BLoc that serves package information to the information drawer.
   InformationBloc(this.packageInfo, this.api) {
     _infoStream = Observable.fromFuture(packageInfo).asBroadcastStream();
 
+    api.getReleases();
+
     _releases = Observable.fromFuture(api.getReleases())
-        .debounce(Duration(minutes: 5))
+        .debounce(Duration(seconds: 1))
         .asBroadcastStream();
   }
 }
