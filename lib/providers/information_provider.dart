@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:package_info/package_info.dart';
+
+import 'package:utopian_rocks/blocs/information_bloc.dart';
+import 'package:utopian_rocks/model/githubApi.dart';
 
 // Provider for the [InformationBloc]
 class InformationProvider extends InheritedWidget {
@@ -22,6 +24,7 @@ class InformationProvider extends InheritedWidget {
   })  : this.informationBloc = informationBloc ??
             InformationBloc(
               PackageInfo.fromPlatform(),
+              GithubApi(),
             ),
         super(
           key: key,

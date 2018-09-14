@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:utopian_rocks/model/model.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Client;
 
 class Api {
-  final http.Client _client = http.Client();
+  final Client _client = Client();
   // static url for the API endpoint
   static const String _url = 'https://utopian.rocks/api/posts?status={0}';
 

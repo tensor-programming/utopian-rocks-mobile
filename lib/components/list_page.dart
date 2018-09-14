@@ -4,9 +4,8 @@ import 'package:utopian_rocks/utils/utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:intl/intl.dart';
-
 import 'package:utopian_rocks/model/htmlParser.dart';
+import 'package:utopian_rocks/providers/information_provider.dart';
 
 class ListPage extends StatelessWidget {
   final String tabname;
@@ -18,6 +17,7 @@ class ListPage extends StatelessWidget {
     // get block from [ContributionProvider] to add to [StreamBuilder]
     final bloc = ContributionProvider.of(context);
     final parseWebsite = ParseWebsite();
+    final infoBloc = InformationProvider.of(context);
     // Pass in the [tabname] or string which represents the page name.
     // Based on the string passed in, the stream will get different contributions.
     bloc.tabname.add(tabname);
@@ -35,31 +35,33 @@ class ListPage extends StatelessWidget {
           );
         }
 
-        bloc.voteCount.listen((vc) => showBottomSheet(
-            context: context,
-            builder: (context) {
-              return Container(
-                color: Color(0xff26A69A),
-                child: Row(
-                  children: [
-                    StreamBuilder(
-                        stream: bloc.timer,
-                        builder: (context, timerSnapshot) {
-                          return Text(
-                            '~ Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
-                            style: TextStyle(fontWeight: FontWeight.w700),
-                          );
-                        }),
-                    Text(
-                      'Vote Power: ${double.parse(vc.replaceAll('\n', '')).toStringAsPrecision(4)}',
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                ),
-              );
-            }));
+        infoBloc.releases.listen((releases) {
+          infoBloc.infoStream.listen((pkInfo) {
+            print(pkInfo.version);
+            print(releases.tagName);
+            if (pkInfo.version.toString() != releases.tagName) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        title: Text('${pkInfo.appName}'),
+                        content: Container(
+                          child: Text(
+                              'A new version of this application is available to download. The current version is ${pkInfo.version} and the new version is ${releases.tagName}'),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Download'),
+                            onPressed: () => _launchUrl(releases.htmlUrl),
+                          ),
+                          FlatButton(
+                            child: Text('Close'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          )
+                        ],
+                      ));
+            }
+          });
+        });
 
         // Generate [ListView] using the [AsyncSnapshot] from the [StreamBuilder]
         // [ListView] provides lazy loading and programmatically generates the Page.

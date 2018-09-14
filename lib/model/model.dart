@@ -50,3 +50,14 @@ class Date {
 
   Date.fromJson(Map json) : date = json['\$date'];
 }
+
+class GithubReleaseModel {
+  final String tagName;
+  final String htmlUrl;
+
+  GithubReleaseModel(this.tagName, this.htmlUrl);
+
+  GithubReleaseModel.fromJson(Map<String, dynamic> json)
+      : this.tagName = json['tag_name'],
+        this.htmlUrl = json['html_url'];
+}

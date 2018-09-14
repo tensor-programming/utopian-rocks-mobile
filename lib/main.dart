@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:package_info/package_info.dart';
+import 'package:intl/intl.dart';
 
 import 'package:utopian_rocks/components/list_page.dart';
 import 'package:utopian_rocks/components/drawer.dart';
@@ -12,6 +13,7 @@ import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
 import 'package:utopian_rocks/model/htmlParser.dart';
+import 'package:utopian_rocks/model/githubApi.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
     return InformationProvider(
       informationBloc: InformationBloc(
         PackageInfo.fromPlatform(),
+        GithubApi(),
       ),
       child: ContributionProvider(
         // Instantiate the API and the BLoC for the entire application.
@@ -95,10 +98,39 @@ class RootApp extends StatelessWidget {
                     ListPage('pending'),
                   ],
                 ),
+                bottomNavigationBar: _buildBottonSheet(context),
                 endDrawer: InformationDrawer(snapshot),
               ),
         ),
       ),
     );
+  }
+
+  Widget _buildBottonSheet(BuildContext context) {
+    final contributionBloc = ContributionProvider.of(context);
+
+    return StreamBuilder(
+        stream: contributionBloc.voteCount,
+        builder: (context, votecountSnapshot) => BottomAppBar(
+              color: Color(0xff26A69A),
+              child: Row(
+                children: [
+                  StreamBuilder(
+                      stream: contributionBloc.timer,
+                      builder: (context, timerSnapshot) {
+                        return Text(
+                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        );
+                      }),
+                  Text(
+                    'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ],
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+              ),
+            ));
   }
 }
