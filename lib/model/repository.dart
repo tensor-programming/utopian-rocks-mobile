@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:utopian_rocks/model/model.dart';
-
 import 'package:http/http.dart' show Client;
+
+import 'package:utopian_rocks/model/model.dart';
 
 class Api {
   final Client _client = Client();

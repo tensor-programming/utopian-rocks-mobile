@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:package_info/package_info.dart';
-import 'package:intl/intl.dart';
 
 import 'package:utopian_rocks/components/list_page.dart';
 import 'package:utopian_rocks/components/drawer.dart';
@@ -12,9 +11,9 @@ import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
-import 'package:utopian_rocks/model/htmlParser.dart';
-import 'package:utopian_rocks/model/githubApi.dart';
-import 'package:utopian_rocks/utils/utils.dart';
+import 'package:utopian_rocks/model/html_parser.dart';
+import 'package:utopian_rocks/model/github_api.dart';
+import 'package:utopian_rocks/components/bottom_sheet.dart';
 
 void main() => runApp(MyApp());
 
@@ -99,12 +98,13 @@ class RootApp extends StatelessWidget {
                 // Page one lists the unreviewed contributions and Page two lists the pending contributions.
                 body: TabBarView(
                   children: <Widget>[
-                    ListPage('unreviewed', contributionBloc, initialize),
-                    ListPage('pending', contributionBloc, initialize),
+                    ListPage('unreviewed', contributionBloc, callback),
+                    ListPage('pending', contributionBloc, callback),
                   ],
                 ),
-                bottomNavigationBar:
-                    _buildBottonSheet(context, contributionBloc),
+                // add [BottomSheetbar] to the [Scaffold]
+                bottomNavigationBar: BottomSheetbar(contributionBloc),
+                // Add the [InformationDrawer] to the [Scaffold]
                 endDrawer: InformationDrawer(snapshot),
               );
             }),
@@ -112,67 +112,8 @@ class RootApp extends StatelessWidget {
     );
   }
 
-  Widget _buildBottonSheet(
-    BuildContext context,
-    ContributionBloc contributionBloc,
-  ) {
-    return StreamBuilder(
-        stream: contributionBloc.voteCount,
-        builder: (context, votecountSnapshot) {
-          return BottomAppBar(
-              color: Color(0xff26A69A),
-              child: Row(
-                children: [
-                  StreamBuilder(
-                      stream: contributionBloc.timer,
-                      builder: (context, timerSnapshot) {
-                        return Text(
-                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        );
-                      }),
-                  Text(
-                    'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: _generateMenu(categories, contributionBloc),
-                  ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ));
-        });
-  }
-
-  Widget _generateMenu(
-    List<String> categories,
-    ContributionBloc bloc,
-  ) {
-    return PopupMenuButton<String>(
-      tooltip: 'Filter Contribution Categories',
-      onSelected: (category) => bloc.filter.add(category),
-      itemBuilder: (context) => categories
-          .map((cate) => PopupMenuItem(
-                height: 40.0,
-                value: cate,
-                child: ListTile(
-                  leading: Icon(
-                    IconData(
-                      icons[cate],
-                      fontFamily: 'Utopicons',
-                    ),
-                    color: colors[cate],
-                  ),
-                  title: Text(cate),
-                ),
-              ))
-          .toList(),
-    );
-  }
-
-  void initialize(String tabName, ContributionBloc bloc) {
+  // Callback function which inserts tabName into the TabName [Sink]
+  void callback(String tabName, ContributionBloc bloc) {
     bloc.tabName.add(tabName);
   }
 }

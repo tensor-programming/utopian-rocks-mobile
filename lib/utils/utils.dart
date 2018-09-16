@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:utopian_rocks/model/model.dart';
 
+// List of categories for the filter
 const categories = [
   'ideas',
   'development',
@@ -68,6 +72,7 @@ const voteWieghts = <String, double>{
   "blog": 30.0,
 };
 
+// List of Statuses to choose the appropriate page
 const statuses = [
   "unreviewed",
   "pending",
@@ -83,12 +88,44 @@ int getIcon(AsyncSnapshot snapshot, int index) {
   return icons[snapshot.data[index].category];
 }
 
+// function that applies the filter to the List of contributions
 List<Contribution> applyFilter(
   String filter,
   List<Contribution> contributions,
 ) {
+  // Apply the filter based on the contribution category if it isn't 'all'
   if (filter != 'all') {
     return contributions.where((c) => c.category == filter).toList();
   }
+  // return all of the contributions.
   return contributions;
+}
+
+// utility function for launching URLs with [url_launcher]
+void launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    print('Launching: $url');
+    await launch(url);
+  } else {
+    print('Could not launch $url');
+  }
+}
+
+// Check that repository exists, if it doesn't exist add default message.
+String checkRepo(AsyncSnapshot snapshot, int index) {
+  if (snapshot.data[index].repository != "") {
+    return snapshot.data[index].repository;
+  } else {
+    return 'No Repository';
+  }
+}
+
+// Using the timeago dart librarty to format the timestamps to create "fuzzy timestamps" for the contributions
+// Timestamp displayed is based on the tabName.  If unreviewed, display created if reviewed display reviewDate.
+String convertTimestamp(AsyncSnapshot snapshot, int index, String tabName) {
+  if (tabName == 'unreviewed') {
+    return "Created: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].created))}";
+  } else {
+    return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";
+  }
 }

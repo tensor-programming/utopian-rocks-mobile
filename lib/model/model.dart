@@ -56,6 +56,7 @@ class Date {
   Date.fromJson(Map json) : date = json['\$date'];
 }
 
+// Model for the github release [Json].  Only need [tag_name] and [html_url]
 class GithubReleaseModel {
   final String tagName;
   final String htmlUrl;

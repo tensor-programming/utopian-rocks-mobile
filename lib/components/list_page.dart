@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:utopian_rocks/utils/utils.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:url_launcher/url_launcher.dart';
 
-import 'package:utopian_rocks/model/htmlParser.dart';
+import 'package:utopian_rocks/model/html_parser.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
+import 'package:utopian_rocks/utils/utils.dart';
 
 class ListPage extends StatelessWidget {
   final ContributionBloc bloc;
@@ -94,9 +92,9 @@ class ListPage extends StatelessWidget {
                           color: categoryColor,
                         ),
                       ),
-                      // Using the share library to deploy a share intent on both android and iOS with the contribution url.
-                      onDoubleTap: () async {
-                        await _launchUrl(snapshot.data[index].url);
+                      // Using the [url_launch] library to deploy an intent on both android and iOS with the contribution url.
+                      onDoubleTap: () {
+                        launchUrl(snapshot.data[index].url);
                       },
                     );
                   }),
@@ -105,34 +103,5 @@ class ListPage extends StatelessWidget {
         );
       },
     );
-  }
-
-  // Check that repository exists, if it doesn't exist add default message.
-  String checkRepo(AsyncSnapshot snapshot, int index) {
-    if (snapshot.data[index].repository != "") {
-      return snapshot.data[index].repository;
-    } else {
-      return 'No Repository';
-    }
-  }
-
-  // Using the timeago dart librarty to format the timestamps to create "fuzzy timestamps" for the contributions
-  // Timestamp displayed is based on the tabName.  If unreviewed, display created if reviewed display reviewDate.
-  String convertTimestamp(AsyncSnapshot snapshot, int index, String tabName) {
-    if (tabName == 'unreviewed') {
-      return "Created: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].created))}";
-    } else {
-      return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";
-    }
-  }
-
-  // Laucn the steemit/utopian url using the url_launcher package.
-  _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      print('Launching: $url');
-      await launch(url);
-    } else {
-      print('Could not launch $url');
-    }
   }
 }

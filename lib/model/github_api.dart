@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:utopian_rocks/model/model.dart';
-
 import 'package:http/http.dart' show Client, Response;
+
+import 'package:utopian_rocks/model/model.dart';
 
 class GithubApi {
   final Client _client = Client();

@@ -1,18 +1,20 @@
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Client;
 
 import 'dart:async';
 
+// Website parsing repository
 class ParseWebsite {
-  http.Client _client = http.Client();
+  Client _client = Client();
 
   static Document document;
   static Duration duration;
 
   static final _url = "https://utopian.rocks/queue";
 
+  // get the html document from the utopain.rocks/queue page
   Future<Document> getHtml() async {
     Document htmlString;
     await _client
@@ -24,6 +26,7 @@ class ParseWebsite {
     return htmlString;
   }
 
+  // grab the vote power inner html
   Future<String> getVotePower() async {
     String votePower;
     document = await getHtml();
@@ -33,6 +36,7 @@ class ParseWebsite {
     return votePower;
   }
 
+  // Get the timer from html document
   Future<int> getTimer(int incomingTimer) async {
     String time;
     int duration;
@@ -42,12 +46,15 @@ class ParseWebsite {
     }
 
     time = document.getElementById('time').innerHtml;
-
+    // split the clock into three strings
     List<String> clock = time.split(':');
+
+    // convert the strings into intergers and then into seconds
     var hours = int.parse(clock[0]) * 60 * 60;
     var minutes = int.parse(clock[1]) * 60;
     var seconds = int.parse(clock[2]);
 
+    // add the hours and minutes as seconds to the seconds and then subtract the incoming timer.
     duration = (hours + minutes + seconds) - incomingTimer;
     return duration;
   }
