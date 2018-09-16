@@ -135,7 +135,10 @@ class RootApp extends StatelessWidget {
                     'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
-                  _generateMenu(categories, contributionBloc),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.0),
+                    child: _generateMenu(categories, contributionBloc),
+                  ),
                 ],
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
