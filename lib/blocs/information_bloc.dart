@@ -23,6 +23,6 @@ class InformationBloc {
     _infoStream = Observable.fromFuture(packageInfo).asBroadcastStream();
     // release information is served as a normal stream which can only be subscribed to once.
     // This stream also only has one element in it. This is done to stop from overflowing the Github API.
-    _releases = Observable.fromFuture(api.getReleases()).take(1);
+    _releases = Observable.fromFuture(api.getReleases()).asBroadcastStream();
   }
 }

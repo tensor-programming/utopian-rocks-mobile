@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
-import 'package:utopian_rocks/blocs/information_bloc.dart';
-import 'package:package_info/package_info.dart';
 
-// import 'package:connectivity/connectivity.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InformationDrawer extends StatelessWidget {
   final AsyncSnapshot infoStreamSnapshot;
@@ -81,32 +79,63 @@ class InformationDrawer extends StatelessWidget {
           'Author & Application Info',
           subtitle:
               'Developed by @Tensor. Many thanks to @Amosbastian for creating the original website: utopian.rocks and to the folks over at utopian.io',
-        )
+        ),
+        RaisedButton(
+          child: Text('Check for Update'),
+          onPressed: () => _getNewRelease(context),
+        ),
       ],
     );
   }
 
-  // Widget _buildConnectionPanel(informationBloc) {
-  //   return StreamBuilder(
-  //     stream: informationBloc.connectionInfo,
-  //     builder: (context, AsyncSnapshot<ConnectivityResult> infoStreamSnapshot) {
-  //       if (!infoStreamSnapshot.hasData) {
-  //         return Container();
-  //       }
-  //       if (infoStreamSnapshot.data == ConnectivityResult.wifi) {
-  //         return Container(
-  //           child: _buildInfoTile('Connected through Wifi'),
-  //         );
-  //       } else if (infoStreamSnapshot.data == ConnectivityResult.mobile) {
-  //         return Container(
-  //           child: _buildInfoTile('Connected through Mobile'),
-  //         );
-  //       } else {
-  //         return Container(
-  //           child: _buildInfoTile('Not connected to the Internet'),
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
+  _getNewRelease(BuildContext context) {
+    final informationBloc = InformationProvider.of(context);
+    informationBloc.releases.listen((releases) {
+      if (infoStreamSnapshot.data.version.toString() != releases.tagName) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: Text('${infoStreamSnapshot.data.appName}'),
+                  content: Container(
+                    child: Text(
+                        'A new version of this application is available to download. The current version is ${infoStreamSnapshot.data.version} and the new version is ${releases.tagName}'),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Download'),
+                      onPressed: () => _launchUrl(releases.htmlUrl),
+                    ),
+                    FlatButton(
+                      child: Text('Close'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('${infoStreamSnapshot.data.appName}'),
+                  content: Container(
+                    child: Text('There is no new version at this time'),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Close'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ));
+      }
+    });
+  }
+
+  void _launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      print('Launching: $url');
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
 }

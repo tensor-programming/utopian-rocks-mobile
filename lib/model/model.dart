@@ -10,6 +10,7 @@ class Contribution {
   final String title;
   final double totalPayout;
   final String url;
+  final String status;
 
   Contribution({
     this.author,
@@ -22,6 +23,7 @@ class Contribution {
     this.title,
     this.totalPayout,
     this.url,
+    this.status,
   });
 
   // From Json Constructor
@@ -41,7 +43,8 @@ class Contribution {
         url = json['url'] as String,
         // Unwrap Date from the json
         created = Date.fromJson(json['created']).date,
-        reviewDate = Date.fromJson(json['review_date']).date;
+        reviewDate = Date.fromJson(json['review_date']).date,
+        status = json['status'];
 }
 
 // Class to easily unwrap the date object from the Json

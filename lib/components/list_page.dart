@@ -1,65 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/utils/utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:utopian_rocks/model/htmlParser.dart';
-import 'package:utopian_rocks/providers/information_provider.dart';
+import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 
 class ListPage extends StatelessWidget {
-  final String tabname;
+  final ContributionBloc bloc;
+  final String tabName;
+  final Function(int, ContributionBloc) callback;
 
-  ListPage(this.tabname);
+  ListPage(this.tabName, this.bloc, this.callback);
+  // Pass in the [tabName] or string which represents the page name.
+  // Based on the string passed in, the stream will get different contributions.
 
   @override
   Widget build(BuildContext context) {
     // get block from [ContributionProvider] to add to [StreamBuilder]
-    final bloc = ContributionProvider.of(context);
     final parseWebsite = ParseWebsite();
-    final infoBloc = InformationProvider.of(context);
-    // Pass in the [tabname] or string which represents the page name.
-    // Based on the string passed in, the stream will get different contributions.
-    bloc.tabname.add(tabname);
+    final tab = DefaultTabController.of(context);
+    callback(tab.index, bloc);
 
     parseWebsite.getHtml();
 
     // [StreamBuilder] auto-updates the data based on the incoming steam from the BLoC
     return StreamBuilder(
-      stream: bloc.results,
+      stream: bloc.filteredResults,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        // callback(bloc, context);
         // If stream hasn't presented data yet, show a [CircularProgressIndicator]
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-
-        infoBloc.infoStream.listen((pkInfo) {
-          infoBloc.releases.listen((releases) {
-            if (pkInfo.version.toString() != releases.tagName) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text('${pkInfo.appName}'),
-                        content: Container(
-                          child: Text(
-                              'A new version of this application is available to download. The current version is ${pkInfo.version} and the new version is ${releases.tagName}'),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Download'),
-                            onPressed: () => _launchUrl(releases.htmlUrl),
-                          ),
-                          FlatButton(
-                            child: Text('Close'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        ],
-                      ));
-            }
-          });
-        });
 
         // Generate [ListView] using the [AsyncSnapshot] from the [StreamBuilder]
         // [ListView] provides lazy loading and programmatically generates the Page.
@@ -72,7 +47,7 @@ class ListPage extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     // Format the data using appropriate methods.
                     String repo = checkRepo(snapshot, index);
-                    String created = convertTimestamp(snapshot, index);
+                    String created = convertTimestamp(snapshot, index, tabName);
                     Color categoryColor = getCategoryColor(snapshot, index);
                     int iconCode = getIcon(snapshot, index);
 
@@ -142,9 +117,9 @@ class ListPage extends StatelessWidget {
   }
 
   // Using the timeago dart librarty to format the timestamps to create "fuzzy timestamps" for the contributions
-  // Timestamp displayed is based on the tabname.  If unreviewed, display created if reviewed display reviewDate.
-  String convertTimestamp(AsyncSnapshot snapshot, int index) {
-    if (tabname == 'unreviewed') {
+  // Timestamp displayed is based on the tabName.  If unreviewed, display created if reviewed display reviewDate.
+  String convertTimestamp(AsyncSnapshot snapshot, int index, String tabName) {
+    if (tabName == 'unreviewed') {
       return "Created: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].created))}";
     } else {
       return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";

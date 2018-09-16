@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:intl/intl.dart';
 
-import 'package:rxdart/rxdart.dart';
-
 import 'package:utopian_rocks/components/list_page.dart';
 import 'package:utopian_rocks/components/drawer.dart';
 
@@ -47,6 +45,7 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final informationBloc = InformationProvider.of(context);
     final contributionBloc = ContributionProvider.of(context);
+
     return MaterialApp(
       // Remove Debug flag to allow app to be production ready.
       debugShowCheckedModeBanner: false,
@@ -61,8 +60,9 @@ class RootApp extends StatelessWidget {
       home: DefaultTabController(
         length: 2,
         child: StreamBuilder(
-          stream: informationBloc.infoStream,
-          builder: (context, snapshot) => Scaffold(
+            stream: informationBloc.infoStream,
+            builder: (context, snapshot) {
+              return Scaffold(
                 appBar: AppBar(
                   // [Flex] allows the image and title to be on the same line in the [AppBar].
                   // Use [MainAxisAlignment.spaceEvenly] to add space between the two widgets.
@@ -99,15 +99,15 @@ class RootApp extends StatelessWidget {
                 // Page one lists the unreviewed contributions and Page two lists the pending contributions.
                 body: TabBarView(
                   children: <Widget>[
-                    ListPage('unreviewed'),
-                    ListPage('pending'),
+                    ListPage('unreviewed', contributionBloc, initialize),
+                    ListPage('pending', contributionBloc, initialize),
                   ],
                 ),
                 bottomNavigationBar:
                     _buildBottonSheet(context, contributionBloc),
                 endDrawer: InformationDrawer(snapshot),
-              ),
-        ),
+              );
+            }),
       ),
     );
   }
@@ -118,27 +118,29 @@ class RootApp extends StatelessWidget {
   ) {
     return StreamBuilder(
         stream: contributionBloc.voteCount,
-        builder: (context, votecountSnapshot) => BottomAppBar(
-            color: Color(0xff26A69A),
-            child: Row(
-              children: [
-                StreamBuilder(
-                    stream: contributionBloc.timer,
-                    builder: (context, timerSnapshot) {
-                      return Text(
-                        'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      );
-                    }),
-                Text(
-                  'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                _generateMenu(categories, contributionBloc),
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-            )));
+        builder: (context, votecountSnapshot) {
+          return BottomAppBar(
+              color: Color(0xff26A69A),
+              child: Row(
+                children: [
+                  StreamBuilder(
+                      stream: contributionBloc.timer,
+                      builder: (context, timerSnapshot) {
+                        return Text(
+                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        );
+                      }),
+                  Text(
+                    'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  _generateMenu(categories, contributionBloc),
+                ],
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+              ));
+        });
   }
 
   Widget _generateMenu(
@@ -165,5 +167,9 @@ class RootApp extends StatelessWidget {
               ))
           .toList(),
     );
+  }
+
+  void initialize(int tabIndex, ContributionBloc bloc) {
+    bloc.tabIndex.add(tabIndex);
   }
 }

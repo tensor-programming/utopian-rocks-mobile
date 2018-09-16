@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:utopian_rocks/model/model.dart';
+
 const categories = [
   'ideas',
   'development',
@@ -66,6 +68,11 @@ const voteWieghts = <String, double>{
   "blog": 30.0,
 };
 
+const statuses = [
+  "unreviewed",
+  "pending",
+];
+
 // Get Color based on Category String
 Color getCategoryColor(AsyncSnapshot snapshot, int index) {
   return colors[snapshot.data[index].category];
@@ -74,4 +81,16 @@ Color getCategoryColor(AsyncSnapshot snapshot, int index) {
 // Get Icon based on Category String
 int getIcon(AsyncSnapshot snapshot, int index) {
   return icons[snapshot.data[index].category];
+}
+
+List<Contribution> applyFilter(
+  String filter,
+  List<Contribution> contributions,
+) {
+  var cons = contributions;
+
+  if (filter != 'all') {
+    return cons.where((c) => c.category == filter).toList();
+  }
+  return cons;
 }
