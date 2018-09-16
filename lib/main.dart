@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:intl/intl.dart';
 
+import 'package:rxdart/rxdart.dart';
+
 import 'package:utopian_rocks/components/list_page.dart';
 import 'package:utopian_rocks/components/drawer.dart';
 
@@ -14,6 +16,7 @@ import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
 import 'package:utopian_rocks/model/htmlParser.dart';
 import 'package:utopian_rocks/model/githubApi.dart';
+import 'package:utopian_rocks/utils/utils.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,6 +46,7 @@ class RootApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final informationBloc = InformationProvider.of(context);
+    final contributionBloc = ContributionProvider.of(context);
     return MaterialApp(
       // Remove Debug flag to allow app to be production ready.
       debugShowCheckedModeBanner: false,
@@ -78,6 +82,7 @@ class RootApp extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   // Add [TabBar] to the [AppBar] to allow the user to navigate from one page to the next.
                   bottom: TabBar(
                     tabs: <Widget>[
@@ -98,7 +103,8 @@ class RootApp extends StatelessWidget {
                     ListPage('pending'),
                   ],
                 ),
-                bottomNavigationBar: _buildBottonSheet(context),
+                bottomNavigationBar:
+                    _buildBottonSheet(context, contributionBloc),
                 endDrawer: InformationDrawer(snapshot),
               ),
         ),
@@ -106,31 +112,58 @@ class RootApp extends StatelessWidget {
     );
   }
 
-  Widget _buildBottonSheet(BuildContext context) {
-    final contributionBloc = ContributionProvider.of(context);
-
+  Widget _buildBottonSheet(
+    BuildContext context,
+    ContributionBloc contributionBloc,
+  ) {
     return StreamBuilder(
         stream: contributionBloc.voteCount,
         builder: (context, votecountSnapshot) => BottomAppBar(
-              color: Color(0xff26A69A),
-              child: Row(
-                children: [
-                  StreamBuilder(
-                      stream: contributionBloc.timer,
-                      builder: (context, timerSnapshot) {
-                        return Text(
-                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        );
-                      }),
-                  Text(
-                    'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+            color: Color(0xff26A69A),
+            child: Row(
+              children: [
+                StreamBuilder(
+                    stream: contributionBloc.timer,
+                    builder: (context, timerSnapshot) {
+                      return Text(
+                        'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      );
+                    }),
+                Text(
+                  'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
+                _generateMenu(categories, contributionBloc),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            )));
+  }
+
+  Widget _generateMenu(
+    List<String> categories,
+    ContributionBloc bloc,
+  ) {
+    return PopupMenuButton<String>(
+      tooltip: 'Filter Contribution Categories',
+      onSelected: (category) => bloc.filter.add(category),
+      itemBuilder: (context) => categories
+          .map((cate) => PopupMenuItem(
+                height: 40.0,
+                value: cate,
+                child: ListTile(
+                  leading: Icon(
+                    IconData(
+                      icons[cate],
+                      fontFamily: 'Utopicons',
+                    ),
+                    color: colors[cate],
                   ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ),
-            ));
+                  title: Text(cate),
+                ),
+              ))
+          .toList(),
+    );
   }
 }

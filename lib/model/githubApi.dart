@@ -11,11 +11,10 @@ class GithubApi {
       'https://api.github.com/repos/tensor-programming/utopian-rocks-mobile/releases';
 
   Future<GithubReleaseModel> getReleases() async {
-    List<GithubReleaseModel> items = [];
-
-    Response res = await _client.get(Uri.parse(_url));
-    List map = json.decode(res.body);
-    var x = map.map((gh) => GithubReleaseModel.fromJson(gh)).toList();
+    String resBody =
+        await _client.get(Uri.parse(_url)).then((Response res) => res.body);
+    List ghJson = json.decode(resBody);
+    var x = ghJson.map((gh) => GithubReleaseModel.fromJson(gh)).toList();
     return x.first;
   }
 }

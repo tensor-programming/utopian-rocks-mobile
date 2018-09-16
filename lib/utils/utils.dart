@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 
+const categories = [
+  'ideas',
+  'development',
+  'bug-hunting',
+  'translations',
+  'graphics',
+  'analysis',
+  'documentation',
+  'tutorials',
+  'video-tutorials',
+  'copywriting',
+  'blog',
+  'social',
+  'all',
+];
+
 // a list of the Utopian Color hexidecimal codes.
 const colors = <String, Color>{
   'ideas': Color(0xFF4DD39F),
@@ -14,6 +30,7 @@ const colors = <String, Color>{
   'copywriting': Color(0xFF007f80),
   'blog': Color(0xff0275d8),
   'social': Color(0xff7bc0f5),
+  'all': Color(0xff3237c9),
 };
 
 // A list of the Utopian Icon font codes.
@@ -30,6 +47,7 @@ const icons = <String, int>{
   'copywriting': 0x0044,
   'blog': 0x0042,
   'social': 0x004c,
+  'all': 0x004e
 };
 
 // Vote wieghts for Utopian vote based on Category

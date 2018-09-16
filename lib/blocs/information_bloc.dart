@@ -18,13 +18,11 @@ class InformationBloc {
   Stream<GithubReleaseModel> get releases => _releases;
 
   // BLoc that serves package information to the information drawer.
+  // Bloc gets Github release information only on application start.
   InformationBloc(this.packageInfo, this.api) {
     _infoStream = Observable.fromFuture(packageInfo).asBroadcastStream();
-
-    api.getReleases();
-
-    _releases = Observable.fromFuture(api.getReleases())
-        .debounce(Duration(minutes: 5))
-        .asBroadcastStream();
+    // release information is served as a normal stream which can only be subscribed to once.
+    // This stream also only has one element in it. This is done to stop from overflowing the Github API.
+    _releases = Observable.fromFuture(api.getReleases()).take(1);
   }
 }

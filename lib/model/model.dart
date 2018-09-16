@@ -28,7 +28,9 @@ class Contribution {
   Contribution.fromJson(Map json)
       : author = json['author'] as String,
         // Remove any -task categories
-        category = (json['category'] as String).replaceFirst('-task', ''),
+        category = (json['category'] as String)
+            .replaceFirst('-task', '')
+            .replaceFirst("task-", ''),
         moderator = json['moderator'] as String,
         // Shorten Repository url for UI page.
         repository = (json['repository'] as String)

@@ -4,6 +4,8 @@ import 'package:utopian_rocks/model/repository.dart';
 import 'package:utopian_rocks/model/htmlParser.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'package:utopian_rocks/utils/utils.dart' as utils;
+
 // Contribution buisness logic class
 class ContributionBloc {
   final Api api;
@@ -19,12 +21,14 @@ class ContributionBloc {
       BehaviorSubject<String>(seedValue: 'pending');
   // Stream<String> _log = Stream.empty();
 
+  BehaviorSubject<String> _filter = BehaviorSubject<String>(seedValue: 'all');
+
   Stream<List<Contribution>> get results => _results;
-  Sink<String> get tabname => _tabname;
   Stream<String> get voteCount => _voteCount;
   Stream<int> get timer => _timer;
 
-  // Stream<String> get log => _log;
+  Sink<String> get tabname => _tabname;
+  Sink<String> get filter => _filter;
 
   ContributionBloc(this.api, this.parseWebsite) {
     _results = _tabname
@@ -32,6 +36,7 @@ class ContributionBloc {
         .debounce(Duration(milliseconds: 300))
         // Apply the api updateContributions function to tabname stream to get results.
         .asyncMap(api.updateContributions)
+        .asyncMap(applyFilter)
         .asBroadcastStream();
 
     _voteCount = Observable.fromFuture(
@@ -41,13 +46,25 @@ class ContributionBloc {
     _timer = Observable.periodic(Duration(seconds: 1), (x) => x)
         .asyncMap(parseWebsite.getTimer)
         .asBroadcastStream();
-
-    // _log = Observable(results)
-    //     .withLatestFrom(_tabname.stream, (_, tabname) => 'results for $tabname')
-    //     .asBroadcastStream();
   }
 
   void dispose() {
     _tabname.close();
+    _filter.close();
+  }
+
+  Future<List<Contribution>> applyFilter(
+      List<Contribution> contributions) async {
+    var filter = await _filter.stream.first ?? 'all';
+    var tabname = await _tabname.stream.first;
+
+    var cons = contributions;
+
+    _tabname.add(tabname);
+    if (filter != 'all') {
+      cons.removeWhere((c) => c.category != filter);
+      return cons;
+    }
+    return cons;
   }
 }
