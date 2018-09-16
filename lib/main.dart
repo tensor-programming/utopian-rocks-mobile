@@ -127,7 +127,7 @@ class RootApp extends StatelessWidget {
                       stream: contributionBloc.timer,
                       builder: (context, timerSnapshot) {
                         return Text(
-                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))} ',
+                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         );
                       }),
@@ -140,7 +140,7 @@ class RootApp extends StatelessWidget {
                     child: _generateMenu(categories, contributionBloc),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
               ));
         });
