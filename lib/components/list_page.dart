@@ -9,7 +9,7 @@ import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 class ListPage extends StatelessWidget {
   final ContributionBloc bloc;
   final String tabName;
-  final Function(int, ContributionBloc) callback;
+  final Function(String, ContributionBloc) callback;
 
   ListPage(this.tabName, this.bloc, this.callback);
   // Pass in the [tabName] or string which represents the page name.
@@ -19,8 +19,8 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // get block from [ContributionProvider] to add to [StreamBuilder]
     final parseWebsite = ParseWebsite();
-    final tab = DefaultTabController.of(context);
-    callback(tab.index, bloc);
+
+    callback(tabName, bloc);
 
     parseWebsite.getHtml();
 

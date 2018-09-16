@@ -87,10 +87,8 @@ List<Contribution> applyFilter(
   String filter,
   List<Contribution> contributions,
 ) {
-  var cons = contributions;
-
   if (filter != 'all') {
-    return cons.where((c) => c.category == filter).toList();
+    return contributions.where((c) => c.category == filter).toList();
   }
-  return cons;
+  return contributions;
 }

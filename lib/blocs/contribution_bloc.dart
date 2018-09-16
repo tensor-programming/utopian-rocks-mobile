@@ -17,7 +17,8 @@ class ContributionBloc {
   Stream<int> _timer = Stream.empty();
   // BehaviorSubject allows seeding the tabIndex data to pending.
   // Tagname is the name of the tab and modifier for the contributions
-  BehaviorSubject<int> _tabIndex = BehaviorSubject<int>(seedValue: 0);
+  BehaviorSubject<String> _tabName =
+      BehaviorSubject<String>(seedValue: 'unreviewed');
   // Stream<String> _log = Stream.empty();
 
   BehaviorSubject<String> _filter = BehaviorSubject<String>(seedValue: 'all');
@@ -27,11 +28,11 @@ class ContributionBloc {
   Stream<String> get voteCount => _voteCount;
   Stream<int> get timer => _timer;
 
-  Sink<int> get tabIndex => _tabIndex;
+  Sink<String> get tabName => _tabName;
   Sink<String> get filter => _filter;
 
   ContributionBloc(this.api, this.parseWebsite) {
-    _results = _tabIndex
+    _results = _tabName
 
         // Apply the api updateContributions function to tabIndex stream to get results.
         .asyncMap(api.updateContributions)
@@ -50,7 +51,7 @@ class ContributionBloc {
   }
 
   void dispose() {
-    _tabIndex.close();
+    _tabName.close();
     _filter.close();
   }
 }

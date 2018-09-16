@@ -169,7 +169,7 @@ class RootApp extends StatelessWidget {
     );
   }
 
-  void initialize(int tabIndex, ContributionBloc bloc) {
-    bloc.tabIndex.add(tabIndex);
+  void initialize(String tabName, ContributionBloc bloc) {
+    bloc.tabName.add(tabName);
   }
 }
