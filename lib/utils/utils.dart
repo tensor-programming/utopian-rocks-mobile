@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
+import 'dart:io' show Platform;
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -129,3 +132,18 @@ String convertTimestamp(AsyncSnapshot snapshot, int index, String tabName) {
     return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";
   }
 }
+
+// Future code for desktop embedding
+
+// void setTargetPlatformDesktop() {
+//   TargetPlatform targetPlatform;
+
+//   if (Platform.isMacOS) {
+//     targetPlatform = TargetPlatform.iOS;
+//   } else if (Platform.isLinux || Platform.isWindows) {
+//     targetPlatform = TargetPlatform.android;
+//   }
+//   if (targetPlatform != null) {
+//     debugDefaultTargetPlatformOverride = targetPlatform;
+//   }
+// }

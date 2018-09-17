@@ -14,8 +14,13 @@ import 'package:utopian_rocks/providers/information_provider.dart';
 import 'package:utopian_rocks/model/html_parser.dart';
 import 'package:utopian_rocks/model/github_api.dart';
 import 'package:utopian_rocks/components/bottom_sheet.dart';
+// import 'package:utopian_rocks/utils/utils.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // Future code for desktop-embedding.
+  // setTargetPlatformDesktop();
+  runApp(MyApp());
+}
 
 // Root of the widget tree.
 class MyApp extends StatelessWidget {
