@@ -46,7 +46,7 @@ class ContributionBloc {
     _filteredResults = Observable.combineLatest2(_filter, _results, applyFilter)
         .asBroadcastStream();
 
-    // calculate voting power and correct every 30 seconds.
+    // calculate voting power and correct every 5 seconds.
     _voteCount = Observable.periodic(
       Duration(seconds: 1),
       (x) => x.toString(),

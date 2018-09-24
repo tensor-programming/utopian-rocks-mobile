@@ -19,7 +19,9 @@ class SteemApi {
   }
 
   Future<String> calculateVotingPower({String x}) async {
-    if (request == null || int.parse(x) % 30 == 0) {
+    if (request == null) {
+      request = await getData();
+    } else if (int.parse(x ?? "0") % 5 == 0) {
       request = await getData();
     }
 
