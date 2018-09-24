@@ -32,7 +32,7 @@ class BottomSheetbar extends StatelessWidget {
                       }),
                   // Parse the votecount as a double with 4 digits
                   Text(
-                    'Vote Power: ${double.parse(votecountSnapshot.data ?? '0.0').toStringAsPrecision(4)}',
+                    'Vote Power: ${votecountSnapshot.data != '100.00' || null ? double.parse(votecountSnapshot.data ?? '0').toStringAsPrecision(4) : 100.00}',
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   Padding(

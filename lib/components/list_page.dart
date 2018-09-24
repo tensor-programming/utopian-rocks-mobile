@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:utopian_rocks/model/html_parser.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
+import 'package:utopian_rocks/model/model.dart';
 import 'package:utopian_rocks/utils/utils.dart';
 
 class ListPage extends StatelessWidget {
@@ -15,17 +16,13 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // get block from [ContributionProvider] to add to [StreamBuilder]
-    final parseWebsite = ParseWebsite();
-
     callback(tabName, bloc);
-
-    parseWebsite.getHtml();
 
     // [StreamBuilder] auto-updates the data based on the incoming steam from the BLoC
     return StreamBuilder(
       stream: bloc.filteredResults,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<List<Contribution>> snapshot) {
         // callback(bloc, context);
         // If stream hasn't presented data yet, show a [CircularProgressIndicator]
         if (!snapshot.hasData) {

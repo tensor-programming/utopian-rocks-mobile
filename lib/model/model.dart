@@ -67,3 +67,14 @@ class GithubReleaseModel {
       : this.tagName = json['tag_name'],
         this.htmlUrl = json['html_url'];
 }
+
+class SteemRequest {
+  final String lastVoteTime;
+  final int votingPower;
+
+  SteemRequest(this.lastVoteTime, this.votingPower);
+
+  SteemRequest.fromJson(Map json)
+      : this.lastVoteTime = json["last_vote_time"],
+        this.votingPower = json["voting_power"];
+}

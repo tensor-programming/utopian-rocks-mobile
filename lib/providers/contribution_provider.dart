@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import 'package:utopian_rocks/model/repository.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
-import 'package:utopian_rocks/model/html_parser.dart';
+import 'package:utopian_rocks/model/steem_api.dart';
+// import 'package:utopian_rocks/model/html_parser.dart';
 
 // Provider provides bloc to the widget tree where we need it by using the [InheritedWidget] class.
 class ContributionProvider extends InheritedWidget {
@@ -26,7 +27,7 @@ class ContributionProvider extends InheritedWidget {
   })  : this.contributionBloc = contributionBloc ??
             ContributionBloc(
               Api(),
-              ParseWebsite(),
+              SteemApi(),
             ),
         super(child: child, key: key);
 }

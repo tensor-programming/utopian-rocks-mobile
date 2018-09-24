@@ -11,9 +11,9 @@ import 'package:utopian_rocks/providers/contribution_provider.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/blocs/information_bloc.dart';
 import 'package:utopian_rocks/providers/information_provider.dart';
-import 'package:utopian_rocks/model/html_parser.dart';
 import 'package:utopian_rocks/model/github_api.dart';
 import 'package:utopian_rocks/components/bottom_sheet.dart';
+import 'package:utopian_rocks/model/steem_api.dart';
 // import 'package:utopian_rocks/utils/utils.dart';
 
 void main() {
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         // Instantiate the API and the BLoC for the entire application.
         contributionBloc: ContributionBloc(
           Api(),
-          ParseWebsite(),
+          SteemApi(),
         ),
         child: RootApp(),
       ),
@@ -49,6 +49,8 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final informationBloc = InformationProvider.of(context);
     final contributionBloc = ContributionProvider.of(context);
+
+    contributionBloc.steemApi.calculateVotingPower();
 
     return MaterialApp(
       // Remove Debug flag to allow app to be production ready.
@@ -91,11 +93,13 @@ class RootApp extends StatelessWidget {
                   bottom: TabBar(
                     tabs: <Widget>[
                       Tab(
-                          icon: Icon(Icons.rate_review),
-                          text: 'Waiting for Review'),
+                        icon: Icon(Icons.rate_review),
+                        text: 'Waiting for Review',
+                      ),
                       Tab(
-                          icon: Icon(Icons.hourglass_empty),
-                          text: 'Waiting on Upvote'),
+                        icon: Icon(Icons.hourglass_empty),
+                        text: 'Waiting on Upvote',
+                      ),
                     ],
                   ),
                 ),

@@ -11,16 +11,22 @@ class Api {
   static const String _url = 'https://utopian.rocks/api/posts?status={0}';
 
   // grab the contributions from the endpoint based on the tabname.
-  Future<List<Contribution>> updateContributions(String tabName) async {
+  Future<List<Contribution>> updateContributions({
+    String tabName = "unreviewed",
+  }) async {
     List<Contribution> items = [];
     await _client
         // add the tabname to the url to change the API endpoint based on the page request
         // Decode the json and then serialize it into [Contribution] objects.
-        .get(Uri.parse(_url.replaceFirst("{0}", tabName ?? "unreviewed")))
+        .get(Uri.parse(_url.replaceFirst("{0}", tabName)))
         .then((res) => res.body)
         .then(json.decode)
-        .then((json) => json.forEach(
-            (contribution) => items.add(Contribution.fromJson(contribution))));
+        .then((json) => json.forEach((contribution) {
+              Contribution con = Contribution.fromJson(contribution);
+              if (con.status == tabName) {
+                items.add(con);
+              }
+            }));
 
     return items;
   }

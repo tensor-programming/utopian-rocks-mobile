@@ -3,13 +3,15 @@ import 'package:rxdart/rxdart.dart';
 
 import 'package:utopian_rocks/model/model.dart';
 import 'package:utopian_rocks/model/repository.dart';
-import 'package:utopian_rocks/model/html_parser.dart';
+// import 'package:utopian_rocks/model/html_parser.dart';
+import 'package:utopian_rocks/model/steem_api.dart';
 import 'package:utopian_rocks/utils/utils.dart';
 
 // Contribution buisness logic class
 class ContributionBloc {
   final Api api;
-  final ParseWebsite parseWebsite;
+  // final ParseWebsite parseWebsite;
+  final SteemApi steemApi;
 
   // setup an empty streams for results, filteredResults, voteCount and timer.
   Stream<List<Contribution>> _results = Stream.empty();
@@ -34,24 +36,34 @@ class ContributionBloc {
   Sink<String> get tabName => _tabName;
   Sink<String> get filter => _filter;
 
-  ContributionBloc(this.api, this.parseWebsite) {
+  ContributionBloc(this.api, this.steemApi) {
     // get results by putting a new tabname into the tabname [Sink]
     _results = _tabName
         // Apply the api updateContributions function to tabIndex stream to get results.
-        .asyncMap(api.updateContributions)
+        .asyncMap((tab) => api.updateContributions(tabName: tab))
         .asBroadcastStream();
     // Combine the Filter Sink and the results stream with the ApplyFilter to create a filtered list of Contributions.
     _filteredResults = Observable.combineLatest2(_filter, _results, applyFilter)
         .asBroadcastStream();
 
-    // put vote count into observable and feed it to the UI.
-    _voteCount =
-        Observable.fromFuture(parseWebsite.getVotePower()).asBroadcastStream();
-
-    // increment timer by emitting stream every second.
-    _timer = Observable.periodic(Duration(seconds: 1), (x) => x)
-        .asyncMap(parseWebsite.getTimer)
+    // calculate voting power and correct every 30 seconds.
+    _voteCount = Observable.periodic(
+      Duration(seconds: 1),
+      (x) => x.toString(),
+    )
+        .asyncMap(
+          (s) => steemApi.calculateVotingPower(x: s),
+        )
         .asBroadcastStream();
+
+    // increment timer by emitting stream every second. Combines voting power and a periodic observable.
+    _timer = Observable.combineLatest2(
+        _voteCount,
+        Observable.periodic(
+          Duration(seconds: 1),
+          (x) => x,
+        ),
+        (x, y) => steemApi.getRechargeTime(x, y)).asBroadcastStream();
   }
 
   void dispose() {
