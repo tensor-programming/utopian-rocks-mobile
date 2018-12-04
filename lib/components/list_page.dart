@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:utopian_rocks/model/html_parser.dart';
+// import 'package:utopian_rocks/model/html_parser.dart';
 import 'package:utopian_rocks/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks/model/model.dart';
 import 'package:utopian_rocks/utils/utils.dart';

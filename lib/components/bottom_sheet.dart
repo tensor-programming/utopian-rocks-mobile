@@ -13,38 +13,37 @@ class BottomSheetbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Build the [BottomAppBar] based on the voteCount stream
-    return StreamBuilder(
-        stream: contributionBloc.voteCount,
-        builder: (context, votecountSnapshot) {
-          return BottomAppBar(
-              color: Color(0xff26A69A),
-              child: Row(
-                children: [
-                  // Build the first [Text] based on the timer stream
-                  StreamBuilder(
-                      stream: contributionBloc.timer,
-                      builder: (context, timerSnapshot) {
-                        // use intl to parse the amount of seconds with [DateTime] into a [DateFormat]
-                        return Text(
-                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        );
-                      }),
-                  // Parse the votecount as a double with 4 digits
-                  Text(
+    return BottomAppBar(
+        color: Color(0xff26A69A),
+        child: Row(
+          children: [
+            // Build the first [Text] based on the timer stream
+            StreamBuilder(
+                stream: contributionBloc.timer,
+                builder: (context, timerSnapshot) {
+                  // use intl to parse the amount of seconds with [DateTime] into a [DateFormat]
+                  return Text(
+                    'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  );
+                }),
+            StreamBuilder(
+                stream: contributionBloc.voteCount,
+                builder: (context, votecountSnapshot) {
+                  return Text(
                     'Vote Power: ${votecountSnapshot.data != '100.00' || null ? double.parse(votecountSnapshot.data ?? '0').toStringAsPrecision(4) : 100.00}',
                     style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    // Create Filter menu on bottom right
-                    child: _generateMenu(categories, contributionBloc),
-                  ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ));
-        });
+                  );
+                }),
+            Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              // Create Filter menu on bottom right
+              child: _generateMenu(categories, contributionBloc),
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+        ));
   }
 
   Widget _generateMenu(

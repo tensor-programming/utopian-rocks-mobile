@@ -40,6 +40,7 @@ const colors = <String, Color>{
   'blog': Color(0xff0275d8),
   'social': Color(0xff7bc0f5),
   'all': Color(0xff3237c9),
+  'anti-abuse': Color(0xff800000),
 };
 
 // A list of the Utopian Icon font codes.
@@ -56,6 +57,7 @@ const icons = <String, int>{
   'copywriting': 0x0044,
   'blog': 0x0042,
   'social': 0x004c,
+  'anti-abuse': 0x0040,
   'all': 0x004e
 };
 

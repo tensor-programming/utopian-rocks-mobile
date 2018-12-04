@@ -1,0 +1,7 @@
+android/
+build/
+ios/
+.vscode/
+.flutter-plugins
+.packages
+pubspec.lock
