@@ -4,8 +4,8 @@ class Contribution {
   final String category;
   final String moderator;
   final String repository;
-  final int created;
-  final int reviewDate;
+  final String created;
+  final String reviewDate;
   final bool staffPicked;
   final String title;
   final double totalPayout;
@@ -42,19 +42,12 @@ class Contribution {
         totalPayout = json['total_payout'] as double,
         url = json['url'] as String,
         // Unwrap Date from the json
-        created = Date.fromJson(json['created']).date,
-        reviewDate = Date.fromJson(json['review_date']).date,
+        created = json['created'],
+        reviewDate = json['review_date'],
         status = json['status'];
 }
 
 // Class to easily unwrap the date object from the Json
-class Date {
-  final int date;
-
-  Date(this.date);
-
-  Date.fromJson(Map json) : date = json['\$date'];
-}
 
 // Model for the github release [Json].  Only need [tag_name] and [html_url]
 class GithubReleaseModel {

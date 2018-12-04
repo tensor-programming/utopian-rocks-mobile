@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'
-    show debugDefaultTargetPlatformOverride;
-import 'dart:io' show Platform;
-
-import 'package:url_launcher/url_launcher.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:utopian_rocks/model/model.dart';
 
 // List of categories for the filter
@@ -129,9 +124,9 @@ String checkRepo(AsyncSnapshot snapshot, int index) {
 // Timestamp displayed is based on the tabName.  If unreviewed, display created if reviewed display reviewDate.
 String convertTimestamp(AsyncSnapshot snapshot, int index, String tabName) {
   if (tabName == 'unreviewed') {
-    return "Created: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].created))}";
+    return "Created: ${timeago.format(DateTime.parse(snapshot.data[index].created))}";
   } else {
-    return "Reviewed: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(snapshot.data[index].reviewDate))}";
+    return "Reviewed: ${timeago.format(DateTime.parse(snapshot.data[index].reviewDate))}";
   }
 }
 
